@@ -9,7 +9,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET, // Make sure this is defined in .env.local
     }),
   ],
-  debug: true, // Enable debugging for detailed logs
+  // debug: true, // Enable debugging for detailed logs
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
