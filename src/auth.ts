@@ -10,6 +10,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   // debug: true, // Enable debugging for detailed logs
+  secret: process.env.AUTH_SECRET ?? "secret",
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
