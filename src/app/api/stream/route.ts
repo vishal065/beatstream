@@ -5,8 +5,6 @@ import { z } from "zod";
 import youtubesearchapi from "youtube-search-api";
 import { YT_REGEX } from "@/app/lib/utlis";
 
-
-
 const createStreamSchema = z.object({
   creatorId: z.string(),
   url: z.string(),
@@ -50,7 +48,12 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    return NextResponse.json({ message: "Added stream", id: stream.id });
+    return NextResponse.json({
+      message: "Added stream",
+      ...stream,
+      hasUpvoted: false,
+      upvotes: 0,
+    });
   } catch (error) {
     console.log(error);
 
@@ -66,13 +69,18 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
+    console.log("get ki req");
+
     const creatorId = req.nextUrl.searchParams.get("creatorId");
+    console.log("creatorId", creatorId);
 
     const strems = await prismaClient.streams.findMany({
       where: {
         userId: creatorId ?? "",
       },
     });
+    console.log("streams", strems);
+
     return NextResponse.json(
       { message: "Streams are", strems },
       { status: 200 }

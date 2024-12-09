@@ -9,6 +9,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast, ToastContainer } from "react-toastify";
 import Image from "next/image";
 import { YT_REGEX } from "../lib/utlis";
+import LiteYouTubeEmbed from "react-lite-youtube-embed";
+import "react-lite-youtube-embed/dist/LiteYouTubeEmbed.css";
 
 interface Video {
   id: string;
@@ -25,35 +27,50 @@ interface Video {
 }
 
 const REFRESH_INTERVAL_MS = 10 * 1000;
+const creatorId = "46d23a53-04be-4b79-855b-b3796431c952";
 
 function Dashboard() {
   const [inputLink, setInputLink] = useState("");
   const [queue, setQueue] = useState<Video[]>([]);
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null);
+  const [loading, setLoading] = useState(false);
 
   async function refreshStreams() {
-    const res = await fetch(`/api /streams/my`, {
-      method: "GET",
-      credentials: "include",
-    });
-    console.log("refresh stream", res);
+    try {
+      const res = await fetch(`/api/stream/my`, {
+        method: "GET",
+        credentials: "include",
+      });
+      const data = await res.json();
+
+      setQueue(data?.stream);
+      console.log("refresh stream", data);
+    } catch (error) {
+      console.log(error);
+    }
   }
   console.log(queue);
 
   useEffect(() => {
     refreshStreams();
-    const interval = setInterval(() => {}, REFRESH_INTERVAL_MS);
+    const interval = setInterval(() => {
+      // refreshStreams();
+    }, REFRESH_INTERVAL_MS);
   }, []);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const newVideo: Video = {
-      id: String(queue.length + 1),
-      title: `New Song ${queue.length + 1}`,
-      upvotes: 0,
-    };
+    setLoading(true);
+    const res = await fetch(`/api/stream`, {
+      method: "POST",
+      body: JSON.stringify({
+        creatorId,
+        url: inputLink,
+      }),
+    });
 
-    setQueue([...queue, newVideo]);
+    setQueue([...queue, await res.json()]);
+    setLoading(false);
     setInputLink("");
   };
 
@@ -84,7 +101,7 @@ function Dashboard() {
     }
   };
   const handleShare = () => {
-    const shareableLink = window.location.href;
+    const shareableLink = `${window.location.hostname}/creator/${creatorId}`;
     navigator.clipboard.writeText(shareableLink).then(() =>
       toast.success("Link copy to clipboard", {
         position: "top-right",
@@ -121,24 +138,17 @@ function Dashboard() {
           />
           <Button
             type="submit"
-            onClick={() => {
-              fetch("/api/streams", {
-                method: "POST",
-                body: JSON.stringify({
-                  creatorId: creatorId,
-                  url: inputLink,
-                }),
-              });
-            }}
+            onClick={handleSubmit}
+            disabled={loading}
             className="w-full bg-purple-700 hover:bg-purple-800 text-white"
           >
-            Add to Queue
+            {loading ? "loading..." : "Add to Queue"}
           </Button>
         </form>
-        {inputLink && inputLink.match(YT_REGEX) && (
+        {inputLink && inputLink.match(YT_REGEX) && !loading && (
           <Card className="bg-gray-900 border-gray-800">
             <CardContent className="p-4">
-              <img src="" alt="" />
+              <LiteYouTubeEmbed title="" id={inputLink.split("?v=")[1]} />
             </CardContent>
           </Card>
         )}
@@ -169,10 +179,10 @@ function Dashboard() {
         </div>
         <div className="space-y-4">
           <h2 className="text-2xl font-bold text-white">Upcoming Songs</h2>
-          {queue.map((video) => (
+          {queue?.map((video) => (
             <Card key={video.id} className=" bg-gray-900 border-gray-800">
               <CardContent className="p-4 flex items-center space-x-4">
-                <Image
+                <img
                   src={video?.smallImg}
                   alt={`Thumbnail for ${video.title}`}
                 />

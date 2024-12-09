@@ -12,6 +12,7 @@ export async function GET() {
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated" }, { status: 403 });
   }
+  console.log("user", user);
 
   const streams = await prismaClient.streams.findMany({
     where: { userId: user.id },
@@ -24,6 +25,7 @@ export async function GET() {
       upvotes: { where: { userId: user.id } },
     },
   });
+  console.log("streams", streams);
 
   return NextResponse.json({
     streams: streams.map(({ _count, ...rest }) => ({
