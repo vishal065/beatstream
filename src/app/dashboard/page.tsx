@@ -1,18 +1,14 @@
 "use client";
-import axios from "axios";
-import {
-  ThumbsUp,
-  ThumbsDown,
-  Share2,
-  Play,
-  ChevronDown,
-  ChevronUp,
-} from "lucide-react";
+// import axios from "axios";
+import { Share2, Play, ChevronDown, ChevronUp } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import NavBar from "../components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast, ToastContainer } from "react-toastify";
+import Image from "next/image";
+import { YT_REGEX } from "../lib/utlis";
 
 interface Video {
   id: string;
@@ -36,9 +32,13 @@ function Dashboard() {
   const [currentVideo, setCurrentVideo] = useState<Video | null>(null);
 
   async function refreshStreams() {
-    const res = await axios.get(`/api/streams/my`);
+    const res = await fetch(`/api /streams/my`, {
+      method: "GET",
+      credentials: "include",
+    });
     console.log("refresh stream", res);
   }
+  console.log(queue);
 
   useEffect(() => {
     refreshStreams();
@@ -51,8 +51,8 @@ function Dashboard() {
       id: String(queue.length + 1),
       title: `New Song ${queue.length + 1}`,
       upvotes: 0,
-      downvotes: 0,
     };
+
     setQueue([...queue, newVideo]);
     setInputLink("");
   };
@@ -135,7 +135,7 @@ function Dashboard() {
             Add to Queue
           </Button>
         </form>
-        {inputLink && (
+        {inputLink && inputLink.match(YT_REGEX) && (
           <Card className="bg-gray-900 border-gray-800">
             <CardContent className="p-4">
               <img src="" alt="" />
@@ -172,7 +172,10 @@ function Dashboard() {
           {queue.map((video) => (
             <Card key={video.id} className=" bg-gray-900 border-gray-800">
               <CardContent className="p-4 flex items-center space-x-4">
-                <img src="" alt="" />
+                <Image
+                  src={video?.smallImg}
+                  alt={`Thumbnail for ${video.title}`}
+                />
                 <div className=" flex-grow">
                   <h3 className="font-semibold text-white">{video.title}</h3>
                   <div className="flex items-center space-x-2 mt-2">

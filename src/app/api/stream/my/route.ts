@@ -1,8 +1,8 @@
 import { prismaClient } from "@/app/lib/db";
 import { auth } from "@/auth";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await auth();
   const user = await prismaClient.user.findFirst({
     where: {

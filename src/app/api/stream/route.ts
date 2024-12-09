@@ -3,10 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 //@ts-expect-error because youtube-search-api dont have types
 import youtubesearchapi from "youtube-search-api";
+import { YT_REGEX } from "@/app/lib/utlis";
 
-const YT_REGEX = new RegExp(
-  "(?:https?:\\/\\/)?(?:www\\.)?(?:youtube\\.com\\/(?:watch\\?v=|embed\\/|v\\/|shorts\\/)|youtu\\.be\\/)([a-zA-Z0-9_-]{11})"
-);
+
 
 const createStreamSchema = z.object({
   creatorId: z.string(),
