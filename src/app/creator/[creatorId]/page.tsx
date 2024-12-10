@@ -1,3 +1,5 @@
+import StreamView from "@/app/components/StreamView";
+
 function page({
   params: { creatorId },
 }: {
@@ -5,7 +7,11 @@ function page({
     creatorId: string;
   };
 }) {
-  return <div>page {creatorId}</div>;
+  return (
+    <div>
+      <StreamView creatorId={creatorId} />
+    </div>
+  );
 }
 
 export default page;

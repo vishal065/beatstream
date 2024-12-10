@@ -9,13 +9,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET, // Make sure this is defined in .env.local
     }),
   ],
-  // debug: true, // Enable debugging for detailed logs
+  debug: true, // Enable debugging for detailed logs
   secret: process.env.AUTH_SECRET ?? "secret",
   callbacks: {
     async signIn({ user, account, profile }) {
       try {
-        console.log("params in signin", { user, account, profile });
-
+        // console.log("params in signin", { user, account, profile });
+        // console.log("check here",process.env.AUTH_GOOGLE_ID);
+        
         // Ensure the user has an email
         if (!user?.email) {
           console.log("No email found for user");

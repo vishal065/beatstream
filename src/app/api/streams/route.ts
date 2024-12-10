@@ -4,6 +4,7 @@ import { z } from "zod";
 //@ts-expect-error because youtube-search-api dont have types
 import youtubesearchapi from "youtube-search-api";
 import { YT_REGEX } from "@/app/lib/utlis";
+import { auth } from "@/auth";
 
 const createStreamSchema = z.object({
   creatorId: z.string(),
@@ -15,6 +16,7 @@ export async function POST(req: NextRequest) {
     const isYt = YT_REGEX.test(data.url);
     const isYt2 = data.url.match(YT_REGEX);
     console.log("isYt-2", isYt2);
+    console.log("data", data);
 
     if (!isYt) {
       return NextResponse.json(
@@ -25,10 +27,17 @@ export async function POST(req: NextRequest) {
     const extractedId = data.url.split("?v=")[1];
 
     const res = await youtubesearchapi.GetVideoDetails(extractedId);
-    const thumbnails = res.thumbnail.thumbnails;
-    thumbnails.sort((a: { width: number }, b: { width: number }) =>
-      a.width < b.width ? -1 : 1
-    );
+    console.log("res", res);
+
+    let thumbnails;
+    thumbnails = res.thumbnail.thumbnails;
+    if (thumbnails) {
+      thumbnails.sort((a: { width: number }, b: { width: number }) =>
+        a.width < b.width ? -1 : 1
+      );
+    } else {
+      thumbnails = "";
+    }
 
     const stream = await prismaClient.streams.create({
       data: {
@@ -69,22 +78,50 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   try {
-    console.log("get ki req");
-
     const creatorId = req.nextUrl.searchParams.get("creatorId");
-    console.log("creatorId", creatorId);
+    const session = await auth();
+
+    const user = await prismaClient.user.findFirst({
+      where: {
+        email: session?.user?.email ?? "",
+      },
+    });
+    if (!user) {
+      return NextResponse.json({ message: "Unauthenticated" }, { status: 403 });
+    }
+    if (!creatorId) {
+      return NextResponse.json(
+        { message: "Error Get Stream" },
+        { status: 411 }
+      );
+    }
 
     const strems = await prismaClient.streams.findMany({
       where: {
-        userId: creatorId ?? "",
+        userId: creatorId,
+      },
+      include: {
+        _count: {
+          select: {
+            upvotes: true,
+          },
+        },
+        upvotes: {
+          where: {
+            userId: user.id,
+          },
+        },
       },
     });
     console.log("streams", strems);
 
-    return NextResponse.json(
-      { message: "Streams are", strems },
-      { status: 200 }
-    );
+    return NextResponse.json({
+      streams: strems.map(({ _count, ...rest }) => ({
+        ...rest,
+        upvotes: _count.upvotes,
+        haveUpvoted: rest.upvotes.length ? true : false,
+      })),
+    });
   } catch (error) {
     return NextResponse.json(
       { message: "Error while fetching the stream", error },
