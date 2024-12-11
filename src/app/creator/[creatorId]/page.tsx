@@ -9,7 +9,7 @@ function page({
 }) {
   return (
     <div>
-      <StreamView creatorId={creatorId} />
+      <StreamView creatorId={creatorId} playVideo={false} />
     </div>
   );
 }

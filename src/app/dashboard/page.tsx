@@ -1,11 +1,13 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import StreamView from "../components/StreamView";
 
-const creatorId = "46d23a53-04be-4b79-855b-b3796431c952";
+const creatorId = "b8ef5b31-d17a-43de-a86b-dccdb18405ad";
 
 function Dashboard() {
-  return <StreamView creatorId={creatorId} />;
+  const session = useSession();
+  return <StreamView creatorId={creatorId} playVideo={true} />;
 }
 
 export default Dashboard;

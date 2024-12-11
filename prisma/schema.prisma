@@ -16,24 +16,34 @@ model User {
 }
 
 model Streams {
-  id          String     @id @default(uuid())
-  type        StreamType
-  url         String
-  extractedId String
-  active      Boolean    @default(true)
-  userId      String
-  bigImg      String
-  smallImg    String
-  title       String
-  user        User       @relation(fields: [userId], references: [id])
-  upvotes     Upvotes[]
+  id             String          @id @default(uuid())
+  type           StreamType
+  url            String
+  extractedId    String
+  active         Boolean         @default(true)
+  userId         String
+  bigImg         String
+  smallImg       String
+  title          String
+  played         Boolean         @default(false)
+  playedTs       DateTime?
+  createdAt      DateTime        @default(now())
+  user           User            @relation(fields: [userId], references: [id])
+  upvotes        Upvotes[]
+  CurrentStreams CurrentStreams?
+}
+
+model CurrentStreams {
+  userId   String   @id @default(uuid())
+  streamId String?  @unique
+  stream   Streams? @relation(fields: [streamId], references: [id])
 }
 
 model Upvotes {
   id       String  @id @default(uuid())
   userId   String
   streamId String
-  stream   Streams @relation(fields: [streamId], references: [id])
+  stream   Streams @relation(fields: [streamId], references: [id], onDelete: Cascade) //cascade vse use nhi hua iss project m
   user     User    @relation(fields: [userId], references: [id])
 
   @@unique([userId, streamId])

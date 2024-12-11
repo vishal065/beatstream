@@ -18,12 +18,14 @@ export async function POST(req: NextRequest) {
   if (!user) {
     return NextResponse.json({ message: "Unauthenticated" }, { status: 403 });
   }
+
+  const data = UpvoteSchema.parse(await req.json());
+
   try {
-    const data = UpvoteSchema.parse(await req.json());
     await prismaClient.upvotes.create({
       data: { userId: user.id, streamId: data.streamId },
     });
-    return NextResponse.json({message:"Done"})
+    return NextResponse.json({ message: "Done" });
   } catch (error) {
     NextResponse.json(
       { message: "Error While upvoting", error },
