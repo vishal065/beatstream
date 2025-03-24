@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-// import axios from "axios";
 import { Share2, Play, ChevronDown, ChevronUp } from "lucide-react";
 import React, { useEffect, useRef, useState } from "react";
 import NavBar from "../components/NavBar";
@@ -28,14 +27,13 @@ interface Video {
   haveUpvoted: boolean;
 }
 
-const REFRESH_INTERVAL_MS = 10 * 1000;
-// const creatorId = "4d72dc8f-83fc-43f5-a772-23bb1cb0f4a8";
+// const REFRESH_INTERVAL_MS = 10 * 1000;
 
 function StreamView({
   creatorId,
   playVideo = false,
 }: {
-  creatorId: string;
+  creatorId: string | null;
   playVideo: boolean;
 }) {
   const [inputLink, setInputLink] = useState("");
@@ -46,12 +44,23 @@ function StreamView({
 
   async function refreshStreams() {
     try {
+      if (creatorId?.trim() === "") {
+        toast.error("Invalid Creator id", {
+          position: "top-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+        });
+        return;
+      }
+
       const res = await fetch(`/api/streams/?creatorId=${creatorId}`, {
         method: "GET",
         credentials: "include",
       });
       const data = await res.json();
-      console.log("null wala", data);
 
       setQueue(
         data?.streams?.sort((a: any, b: any) =>
@@ -68,14 +77,13 @@ function StreamView({
       console.log(error);
     }
   }
-  console.log("queue", queue);
 
   useEffect(() => {
     refreshStreams();
     // const interval = setInterval(() => {
     //   // refreshStreams();
     // }, REFRESH_INTERVAL_MS);
-  }, []);
+  }, [creatorId]);
 
   useEffect(() => {
     if (!videoPlayerRef.current) {
@@ -86,7 +94,6 @@ function StreamView({
     player.playVideo();
 
     function eventHandler(event: any) {
-      console.log(event);
       if (event.data === 0) {
         playNext();
       }
@@ -100,6 +107,21 @@ function StreamView({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!creatorId || creatorId.trim() === "") {
+      toast.error("Invalid Creator id", {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      setCurrentVideo(null);
+      setQueue([]);
+      setInputLink("");
+      return;
+    }
     setLoading(true);
     const res = await fetch(`/api/streams`, {
       method: "POST",
@@ -140,7 +162,6 @@ function StreamView({
         method: "GET",
       });
       const data = await res.json();
-      console.log("video ka data", data);
 
       setCurrentVideo(data?.stream);
       setQueue((q) => q.filter((x) => x.id !== data?.stream?.id));

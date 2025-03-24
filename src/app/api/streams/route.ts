@@ -36,9 +36,7 @@ export async function POST(req: NextRequest) {
     } else {
       thumbnails = "";
     }
-    console.log("line 40", data.creatorId);
-    console.log("line 40", extractedId);
-    console.log("line 40", res);
+ 
 
     const stream = await prismaClient.streams.create({
       data: {
