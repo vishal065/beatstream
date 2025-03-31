@@ -6,7 +6,7 @@ import NavBar from "../components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 // import Image from "next/image";
 import { YT_REGEX } from "../lib/utlis";
 import LiteYouTubeEmbed from "react-lite-youtube-embed";
@@ -321,19 +321,6 @@ function StreamView({
             </div>
           </div>
         </div>
-
-        <ToastContainer
-          position="top-right"
-          autoClose={3000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-          theme="dark"
-        />
       </div>
     </div>
   );

@@ -1,17 +1,10 @@
+"use client";
 // import StreamView from "@/app/components/StreamView";
 
-// function page({
-//   params: { creatorId },
-// }: {
-//   params: {
-//     creatorId: string;
-//   };
-// }) {
-//   return (
-//     <div>
-//       {/* <StreamView creatorId={creatorId} playVideo={false} /> */}
-//     </div>
-//   );
-// }
-
-// export default page;
+function Page() {
+  return null;
+  // <div>
+  //   <StreamView creatorId={params.creatorId} playVideo={false} />
+  // </div>
+}
+export default Page;
