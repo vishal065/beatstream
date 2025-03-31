@@ -12,7 +12,7 @@ export default function Home() {
       <header className="px-4 py-4 lg:px-6 h-14 flex items-center border-b border-gray-200 dark:border-gray-800">
         <Link className="flex items-center justify-center" href="#">
           <Music className="h-6 w-6" />
-          <span className="ml-2 text-2xl font-bold">FanTune</span>
+          <span className="ml-2 text-2xl font-bold">BeatStream</span>
         </Link>
         <nav className="ml-auto  flex gap-4 sm:gap-6">
           <div className="mt-2 flex gap-4 sm:gap-6">
@@ -146,8 +146,8 @@ export default function Home() {
               <Card className="bg-white dark:bg-gray-900">
                 <CardContent className="p-6">
                   <p className="text-gray-500 dark:text-gray-400 mb-4">
-                    &quot;FanTune has revolutionized my streams. The engagement
-                    from my audience has skyrocketed!&quot;
+                    &quot;BeatStream has revolutionized my streams. The
+                    engagement from my audience has skyrocketed!&quot;
                   </p>
                   <p className="font-semibold">- Alex, Music Streamer</p>
                 </CardContent>
@@ -173,7 +173,7 @@ export default function Home() {
                   Ready to Transform Your Streams?
                 </h2>
                 <p className="mx-auto max-w-[600px] text-gray-500 dark:text-gray-400 md:text-xl">
-                  Join FanTune today and start creating unforgettable
+                  Join BeatStream today and start creating unforgettable
                   experiences for your audience.
                 </p>
               </div>
@@ -197,7 +197,7 @@ export default function Home() {
       </main>
       <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-gray-200 dark:border-gray-800">
         <p className="text-xs text-gray-500 dark:text-gray-400">
-          © 2024 FanTune. All rights reserved.
+          © 2024 BeatStream. All rights reserved.
         </p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link className="text-xs hover:underline underline-offset-4" href="#">

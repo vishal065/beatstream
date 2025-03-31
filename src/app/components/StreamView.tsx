@@ -74,7 +74,7 @@ function StreamView({
         return data?.activeStream?.stream ?? "";
       });
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
@@ -157,7 +157,7 @@ function StreamView({
   };
 
   const playNext = async () => {
-    if (queue.length > 0) {
+    if (queue?.length > 0) {
       const res = await fetch(`/api/streams/next`, {
         method: "GET",
       });
@@ -272,7 +272,7 @@ function StreamView({
                 <h2 className="text-2xl font-bold text-white">
                   Upcoming Songs
                 </h2>
-                {queue.length === 0 && (
+                {queue?.length === 0 && (
                   <Card className="bg-gray-900 border-gray-800 w-full">
                     <CardContent className="p-4">
                       <p className="text-center py-8 text-gray-400">
@@ -321,20 +321,20 @@ function StreamView({
             </div>
           </div>
         </div>
-      </div>
 
-      <ToastContainer
-        position="top-right"
-        autoClose={3000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="dark"
-      ></ToastContainer>
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"
+        />
+      </div>
     </div>
   );
 }

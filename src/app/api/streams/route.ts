@@ -15,7 +15,6 @@ export async function POST(req: NextRequest) {
     const data = createStreamSchema.parse(await req.json());
     const isYt = YT_REGEX.test(data.url);
     // const isYt2 = data.url.match(YT_REGEX);
-    console.log(data);
 
     if (!isYt) {
       return NextResponse.json(
@@ -36,7 +35,6 @@ export async function POST(req: NextRequest) {
     } else {
       thumbnails = "";
     }
- 
 
     const stream = await prismaClient.streams.create({
       data: {
@@ -60,7 +58,7 @@ export async function POST(req: NextRequest) {
       upvotes: 0,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
 
     return NextResponse.json(
       {

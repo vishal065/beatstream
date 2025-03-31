@@ -12,13 +12,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   debug: true, // Enable debugging for detailed logs
   secret: process.env.AUTH_SECRET ?? "secret",
   callbacks: {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signIn({ user, account, profile }) {
       try {
         if (!user?.email) {
-          console.log("No email found for user");
           return false; // Return false to deny access
         }
-
         let existingUser = await prismaClient.user.findUnique({
           where: { email: user.email },
         });
@@ -32,7 +31,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
         user.id = existingUser.id;
       } catch (error) {
-        console.log("Error in signIn callback:", error);
+        console.error("Error in signIn callback:", error);
         return false; // If any error occurs, deny the sign-in
       }
       return true; // Allow the sign-in
