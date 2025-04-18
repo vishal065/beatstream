@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
       );
     }
     const extractedId: string = data.url.split("?v=")[1];
-    console.log("extractedId---", extractedId);
+    console.log("extractedId---", data);
 
     const res = await youtubesearchapi.GetVideoDetails(extractedId);
 
@@ -43,8 +43,8 @@ export async function POST(req: NextRequest) {
 
     const stream = await prismaClient.streams.create({
       data: {
-        userId: data.creatorId,
-        url: data.url,
+        userId: data?.creatorId,
+        url: data?.url,
         extractedId,
         type: "youtube",
         title: res.title ?? "cant find video",
