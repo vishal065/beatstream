@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     console.log("res---", res);
 
     let thumbnails;
-    thumbnails = res.thumbnail.thumbnails ?? "";
+    thumbnails = res?.thumbnail?.thumbnails ?? "";
     if (thumbnails && thumbnails.length) {
       thumbnails.sort((a: { width: number }, b: { width: number }) =>
         a.width < b.width ? -1 : 1
@@ -38,6 +38,8 @@ export async function POST(req: NextRequest) {
     } else {
       thumbnails = "";
     }
+
+    console.log("111111111111111", thumbnails);
 
     const stream = await prismaClient.streams.create({
       data: {
@@ -55,6 +57,7 @@ export async function POST(req: NextRequest) {
           : "",
       },
     });
+    console.log("222222222222222222222", stream);
 
     return NextResponse.json({
       message: "Added stream",
