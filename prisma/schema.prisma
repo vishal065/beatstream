@@ -22,8 +22,8 @@ model Streams {
   extractedId    String
   active         Boolean         @default(true)
   userId         String
-  bigImg         String
-  smallImg       String
+  bigImg         String?
+  smallImg       String?
   title          String
   played         Boolean         @default(false)
   playedTs       DateTime?

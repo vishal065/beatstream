@@ -23,12 +23,15 @@ export async function POST(req: NextRequest) {
       );
     }
     const extractedId = data.url.split("?v=")[1];
+    console.log("extractedId---", extractedId);
 
     const res = await youtubesearchapi.GetVideoDetails(extractedId);
 
+    console.log("res---", res);
+
     let thumbnails;
-    thumbnails = res.thumbnail.thumbnails;
-    if (thumbnails) {
+    thumbnails = res.thumbnail.thumbnails ?? "";
+    if (thumbnails && thumbnails.length) {
       thumbnails.sort((a: { width: number }, b: { width: number }) =>
         a.width < b.width ? -1 : 1
       );
