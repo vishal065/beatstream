@@ -49,11 +49,11 @@ export async function POST(req: NextRequest) {
         type: "youtube",
         title: res.title ?? "cant find video",
         smallImg:
-          (Array.isArray(thumbnails) && thumbnails.length > 1
-            ? thumbnails[thumbnails.length - 2].url
-            : thumbnails[thumbnails.length - 1].url) ?? "",
+          (Array.isArray(thumbnails) && thumbnails?.length > 1
+            ? thumbnails[thumbnails.length - 2]?.url
+            : thumbnails[thumbnails.length - 1]?.url) ?? "",
         bigImg: Array.isArray(thumbnails)
-          ? thumbnails[thumbnails.length - 1].url
+          ? thumbnails[thumbnails.length - 1]?.url
           : "",
       },
     });
