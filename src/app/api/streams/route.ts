@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
         { status: 411 }
       );
     }
-    const extractedId = data.url.split("?v=")[1];
+    const extractedId: string = data.url.split("?v=")[1];
     console.log("extractedId---", extractedId);
 
     const res = await youtubesearchapi.GetVideoDetails(extractedId);
@@ -47,10 +47,12 @@ export async function POST(req: NextRequest) {
         type: "youtube",
         title: res.title ?? "cant find video",
         smallImg:
-          (thumbnails.length > 1
+          (Array.isArray(thumbnails) && thumbnails.length > 1
             ? thumbnails[thumbnails.length - 2].url
             : thumbnails[thumbnails.length - 1].url) ?? "",
-        bigImg: thumbnails[thumbnails.length - 1].url ?? "",
+        bigImg: Array.isArray(thumbnails)
+          ? thumbnails[thumbnails.length - 1].url
+          : "",
       },
     });
 
